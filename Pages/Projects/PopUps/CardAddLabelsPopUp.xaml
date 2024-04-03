@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               x:Class="Quick_Planner.Pages.Projects.PopUps.CardAddLabelsPopUp"
+               xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+               xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+               xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+               xmlns:models="clr-namespace:Quick_Planner.Models"
+               x:DataType="viewmodel:EditCardViewModel"
+               Color="Transparent">
+    <Grid RowDefinitions="Auto"
+          VerticalOptions="Center"
+          HorizontalOptions="Center"
+          ColumnDefinitions="300">
+        <Border HeightRequest="500"
+                BackgroundColor="{DynamicResource Primary}"
+                x:Name="Border">
+            <Grid RowDefinitions="*,Auto"
+                  RowSpacing="15">
+                <Border BackgroundColor="{DynamicResource Quaternary}"
+                        Padding="5, 0">
+                    <CollectionView ItemsSource="{Binding Labels}"
+                                    BackgroundColor="Transparent">
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
+                                               ItemSpacing="5"/>
+                        </CollectionView.ItemsLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="{x:Type models:Label}">
+                                <Border BackgroundColor="{Binding Color}">
+                                    <Grid>
+                                        <Label Text="{Binding Title}"
+                                               TextColor="{DynamicResource Quaternary}"
+                                               LineBreakMode="TailTruncation"
+                                               HorizontalOptions="Start"
+                                               VerticalOptions="Center"/>
+                                        <Border Grid.Column="1"
+                                                HeightRequest="50"
+                                                WidthRequest="50"
+                                                StrokeShape="RoundRectangle 5"
+                                                BackgroundColor="{DynamicResource Quaternary}"
+                                                HorizontalOptions="End"
+                                                VerticalOptions="Center">
+                                            <Image Source="checkmark_icon.png"
+                                                    HeightRequest="20"
+                                                    WidthRequest="20"
+                                                    IsVisible="{Binding IsSelected}">
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Border}, Path=BackgroundColor}"/>
+                                                </Image.Behaviors>
+                                            </Image>
+                                        </Border>
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditCardViewModel}}, Path=SelectLabelCommand}"
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </Border>
+                <Grid Grid.Row="1"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="15">
+                    <Grid Grid.Column="0">
+                        <Border HeightRequest="50"
+                                Padding="0"
+                                BackgroundColor="{DynamicResource Tertiary}">
+                            <Grid>
+                                <Image Source="checkmark_icon.png"
+                                       HeightRequest="25">
+                                    <Image.Behaviors>
+                                        <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Border}, Path=BackgroundColor}"/>
+                                    </Image.Behaviors>
+                                </Image>
+                                <Button CornerRadius="0"
+                                        Command="{Binding ApplyLabelsCommand}"
+                                        BackgroundColor="Transparent"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Column="1">
+                        <Border HeightRequest="50"
+                                Padding="0"
+                                BackgroundColor="{DynamicResource Tertiary}">
+                            <Grid>
+                                <Image Source="cancel2_icon.png"
+                                       HeightRequest="35">
+                                    <Image.Behaviors>
+                                        <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Border}, Path=BackgroundColor}"/>
+                                    </Image.Behaviors>
+                                </Image>
+                                <Button CornerRadius="0"
+                                        Command="{Binding HideWindowCommand}"
+                                        BackgroundColor="Transparent"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</toolkit:Popup>

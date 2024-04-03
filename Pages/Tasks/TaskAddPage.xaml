@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:Class="Quick_Planner.Pages.Tasks.TaskAddPage"
+             x:DataType="viewmodel:TaskAddViewModel"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters">
+    <ContentPage.Resources>
+        <converter:IntToBool x:Key="intToBool" />
+    </ContentPage.Resources>
+    <Grid RowDefinitions="*, .2*"
+          RowSpacing="15"
+          Padding="15,25,15,25"
+          BackgroundColor="{DynamicResource Quaternary}">
+        <ScrollView Grid.Row="0">
+            <Grid RowDefinitions="Auto, *"
+                  RowSpacing="15">
+                <Grid RowDefinitions="*,*"
+                      Grid.Row="0"
+                      RowSpacing="15">
+                    <Grid RowDefinitions="*,*"
+                          RowSpacing="5">
+                        <Label Grid.Row="0"
+                               Text="{loc:Translate Title}"/>
+                        <Frame Grid.Row="1" 
+                               HeightRequest="60"
+                               BackgroundColor="{DynamicResource Tertiary}"
+                               CornerRadius="0"
+                               Padding="15,0,0,0">
+                            <Entry Grid.Row="1" 
+                                   Placeholder="{loc:Translate Title_Temp}"
+                                   Text="{Binding CurrentTask.Title, Mode=TwoWay}"
+                                   HeightRequest="60"/>
+                        </Frame>
+                    </Grid>
+                    <Frame Grid.Row="2">
+                        <Grid>
+                            <Label Grid.Row="0"
+                                   Text="{loc:Translate Set_Date}"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"/>
+                            <Switch x:Name="Switch"
+                                    Grid.Row="1"
+                                    IsToggled="{Binding CurrentTask.HasEndDate, Mode=TwoWay}"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center"/>
+                        </Grid>
+                    </Frame>
+                </Grid>
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      Grid.Row="2"
+                      RowSpacing="15"
+                      IsEnabled="{Binding Source={x:Reference Switch}, Path=IsToggled}"
+                      IsVisible="{Binding Source={x:Reference Switch}, Path=IsToggled}">
+                    <Grid RowDefinitions="*,*"
+                          Grid.Row="0"
+                          RowSpacing="5">
+                        <Label Grid.Row="0"
+                               Text="{loc:Translate Date}"/>
+                        <Frame Grid.Row="1" 
+                               HeightRequest="60"
+                               BackgroundColor="{DynamicResource Tertiary}"
+                               CornerRadius="0"
+                               Padding="15,0,0,0">
+                            <DatePicker Grid.Row="1"
+                                        HeightRequest="60"
+                                        VerticalOptions="Center"
+                                        Date="{Binding CurrentTask.Date, Mode=TwoWay}"
+                                        MinimumDate="{Binding Source={x:Static sys:DateTime.Today}}">
+                            </DatePicker>
+                        </Frame>
+                    </Grid>
+                    <Grid RowDefinitions="*,*"
+                          Grid.Row="1"
+                          RowSpacing="5">
+                        <Label Grid.Row="0"
+                               Text="{loc:Translate Time}"/>
+                        <Frame Grid.Row="1" 
+                               HeightRequest="60"
+                               BackgroundColor="{DynamicResource Tertiary}"
+                               CornerRadius="0"
+                               Padding="15,0,0,0">
+                            <TimePicker Grid.Row="1"
+                                        HeightRequest="60"
+                                        VerticalOptions="Center"
+                                        Time="{Binding CurrentTask.Time, Mode=TwoWay}"/>
+                        </Frame>
+                    </Grid>
+                    <Grid RowDefinitions="*,*"
+                          Grid.Row="2"
+                          RowSpacing="5">
+                        <Label Grid.Row="0"
+                               Text="{loc:Translate Notification_Type}"/>
+                        <Frame Grid.Row="1" 
+                               HeightRequest="60"
+                               BackgroundColor="{DynamicResource Tertiary}"
+                               CornerRadius="0"
+                               Padding="15,0,0,0">
+                            <Picker x:Name="NotificationPicker"
+                                    Title="{loc:Translate Notification_Type_Temp}"
+                                    Grid.Row="1"
+                                    HeightRequest="60"
+                                    VerticalOptions="Center"
+                                    SelectedIndex="{Binding CurrentTask.Notificationtype, Mode=TwoWay}"/>
+                        </Frame>
+                    </Grid>
+                    <Frame Grid.Row="3"
+                           Padding="15"
+                           IsEnabled="{Binding Source={x:Reference NotificationPicker}, Path=SelectedIndex, Converter={StaticResource intToBool}}"
+                           IsVisible="{Binding Source={x:Reference NotificationPicker}, Path=SelectedIndex, Converter={StaticResource intToBool}}">
+                        <Grid RowSpacing="5">
+                            <Label Grid.Row="0"
+                                   Text="{loc:Translate Set_Notification_Time}"
+                                   HorizontalOptions="Start"
+                                   VerticalOptions="Center"/>
+                            <Switch x:Name="Switch2"
+                                    Grid.Row="1"
+                                    IsToggled="{Binding CurrentTask.IsNotificationTimeSet, Mode=TwoWay}"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center">
+                                <Switch.Triggers>
+                                    <DataTrigger TargetType="Switch"
+                                                 Binding="{Binding Source={x:Reference NotificationPicker}, Path=SelectedIndex}"
+                                                 Value="0">
+                                        <Setter Property="IsToggled" Value="False"/>
+                                    </DataTrigger>
+                                </Switch.Triggers>
+                            </Switch>
+                        </Grid>
+                    </Frame>
+                    <Grid RowDefinitions="*, *"
+                          Grid.Row="4"
+                          RowSpacing="5"
+                          IsEnabled="{Binding Source={x:Reference Switch2}, Path=IsToggled}"
+                          IsVisible="{Binding Source={x:Reference Switch2}, Path=IsToggled}">
+                        <Label Grid.Row="0"
+                               Text="{loc:Translate Notification_Time}"/>
+                        <Frame Grid.Row="1" 
+                               HeightRequest="60"
+                               BackgroundColor="{DynamicResource Tertiary}"
+                               CornerRadius="0"
+                               Padding="15,0,0,0">
+                            <TimePicker Grid.Row="1"
+                                        VerticalOptions="Center"
+                                        HeightRequest="60"
+                                        Time="{Binding CurrentTask.Notificationtime, Mode=TwoWay}"/>
+                        </Frame>
+                    </Grid>
+                </Grid>
+            </Grid>
+        </ScrollView>
+        <Button Grid.Row="1" 
+                Text="{loc:Translate Add}"
+                CornerRadius="20"
+                Command="{Binding CreateTaskCommand}"
+                TextColor="White"
+                HeightRequest="100"
+                WidthRequest="150">
+            <Button.Triggers>
+                <DataTrigger TargetType="Button"
+                                         Binding="{Binding Editing}"
+                                         Value="true">
+                    <Setter Property="Text" Value="{loc:Translate Edit}"/>
+                </DataTrigger>
+            </Button.Triggers>
+        </Button>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Pages.Projects.EditListPage"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:DataType="viewmodel:EditListViewModel"
+             BackgroundColor="{DynamicResource Quaternary}">
+    <Grid>
+        <Grid RowDefinitions="*,Auto">
+            <ScrollView>
+                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                      Padding="15"
+                      RowSpacing="10">
+                    <Label Text="{loc:Translate Title}"
+                           VerticalOptions="Center" 
+                           HorizontalOptions="Start" 
+                           x:Name="TitleLabel"/>
+                    <Border Grid.Row="1" >
+                        <Entry Text="{Binding List.Title}"/>
+                    </Border>
+                    <Button Grid.Row="2"
+                            Text="{loc:Translate List_Move_Elements}"
+                            HeightRequest="70"
+                            Command="{Binding OpenMoveCardsWindowCommand}"/>
+                    <Button Grid.Row="3"
+                            Text="{loc:Translate Remove_Cards}"
+                            HeightRequest="70"
+                            TextColor="OrangeRed"
+                            Command="{Binding OpenRemoveCardsWindowCommand}"/>
+                    <Button Grid.Row="4"
+                            Text="{loc:Translate Remove_List}"
+                            HeightRequest="70"
+                            TextColor="OrangeRed"
+                            Command="{Binding OpenRemoveListWindowCommand}"/>
+                </Grid>
+            </ScrollView>
+            <Button Grid.Row="1"
+                    HeightRequest="100"
+                    Clicked="Return"
+                    FontSize="Large"
+                    Text="{loc:Translate Back}"/>
+        </Grid>
+    </Grid>
+</ContentPage>

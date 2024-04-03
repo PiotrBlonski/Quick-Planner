@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Resources.Styles.Style">
+	<Style TargetType="ContentPage">
+		<Setter Property="BackgroundColor" Value="{DynamicResource Quaternary}" />
+	</Style>
+
+	<Style TargetType="StackLayout">
+		<Setter Property="BackgroundColor" Value="{DynamicResource Quaternary}" />
+	</Style>
+
+	<Style TargetType="Grid">
+		<Setter Property="BackgroundColor" Value="Transparent" />
+	</Style>
+
+	<Style TargetType="ScrollView">
+		<Setter Property="BackgroundColor" Value="{DynamicResource Quaternary}" />
+	</Style>
+
+    <Style TargetType="CollectionView">
+        <Setter Property="BackgroundColor" Value="{DynamicResource Quaternary}" />
+        <Setter Property="Header">
+            <Grid></Grid>
+        </Setter>
+        <Setter Property="Footer">
+            <Grid></Grid>
+        </Setter>
+    </Style>
+
+    <Style TargetType="Frame">
+		<Setter Property="BackgroundColor" Value="{DynamicResource Secondary}" />
+        <Setter Property="CornerRadius" Value="25" />
+    </Style>
+
+    <Style TargetType="Border">
+        <Setter Property="StrokeShape" Value="RoundRectangle 15"/>
+        <Setter Property="Padding" Value="15"/>
+        <Setter Property="BackgroundColor" Value="{DynamicResource Secondary}"/>
+        <Setter Property="StrokeThickness" Value="0"/>
+    </Style>
+
+    <Style TargetType="Label">
+        <Setter Property="TextColor" Value="{DynamicResource Primary}" />
+        <Setter Property="BackgroundColor" Value="Transparent" />
+	</Style>
+
+    <Style TargetType="DatePicker">
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <Style TargetType="TimePicker">
+        <Setter Property="TextColor" Value="White" />
+    </Style>
+
+    <Style TargetType="Picker">
+        <Setter Property="TextColor" Value="White"/>
+    </Style>
+
+    <Style TargetType="Button">
+		<Setter Property="BackgroundColor" Value="{DynamicResource Tertiary}" />
+        <Setter Property="BorderColor" Value="Transparent"/>
+    </Style>
+
+    <Style TargetType="Entry">
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="PlaceholderColor" Value="{DynamicResource Quaternary}" />
+    </Style>
+
+    <Style TargetType="Slider">
+        <Setter Property="ThumbColor" Value="{DynamicResource Quaternary}"/>
+        <Setter Property="MinimumTrackColor" Value="{DynamicResource Tertiary}"/>
+        <Setter Property="MaximumTrackColor" Value="{DynamicResource Quaternary}" />
+    </Style>
+
+    <Style TargetType="Switch">
+        <Setter Property="OnColor" Value="{DynamicResource Primary}"/>
+        <Setter Property="ThumbColor" Value="{DynamicResource Tertiary}"/>
+    </Style>
+
+</ResourceDictionary>

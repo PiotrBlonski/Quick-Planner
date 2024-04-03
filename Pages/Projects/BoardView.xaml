@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Pages.Projects.BoardView"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:DataType="viewmodel:BoardViewModel">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid RowDefinitions=".1*, *">
+        <Grid Grid.Row="0"
+              ColumnDefinitions="*,*"
+              BackgroundColor="{DynamicResource Tertiary}"
+              x:Name="Grid1">
+            <Label Text="{Binding Board.Name}"
+                   LineBreakMode="TailTruncation"
+                   FontSize="Large"
+                   VerticalOptions="Center"
+                   HorizontalOptions="Start"
+                   Margin="15,0,0,0"
+                   x:Name="BoardLabel"/>
+            <Border Grid.Column="1"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"
+                    StrokeShape="Ellipse"
+                    WidthRequest="70"
+                    HeightRequest="70"
+                    Padding="0">
+                <Grid>
+                    <Image Source="pen_icon.png"
+                           VerticalOptions="Center"
+                           HorizontalOptions="Center"
+                           Grid.Column="1"
+                           HeightRequest="35">
+                        <Image.Behaviors>
+                            <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference BoardLabel}, Path=TextColor}" />
+                        </Image.Behaviors>
+                    </Image>
+                    <Button BackgroundColor="Transparent"
+                            Command="{Binding EditBoardCommand}"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Row="1"
+              BackgroundColor="{DynamicResource Quaternary}">
+            <Grid RowDefinitions="*,*"
+                  RowSpacing="5">
+                <CollectionView ItemsSource="{Binding Board.Lists, Mode=TwoWay}"
+                                SelectionMode="None"
+                                BackgroundColor="Transparent"
+                                VerticalScrollBarVisibility="Always">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Horizontal"
+                                           ItemSpacing="5"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:List}">
+                            <Border BackgroundColor="{DynamicResource Primary}"
+                                    Padding="0"
+                                    WidthRequest="190"
+                                    VerticalOptions="Start">
+                                <Grid RowDefinitions="Auto,*,Auto">
+                                    <Grid ColumnDefinitions="*, Auto"
+                                          Margin="10">
+                                        <Label Text="{Binding Title}"
+                                                TextColor="{DynamicResource Quaternary}"
+                                                HorizontalOptions="Start"
+                                                VerticalOptions="Center"
+                                                LineBreakMode="TailTruncation"/>
+                                        <Border Grid.Column="1"
+                                                Padding="0"
+                                                StrokeShape="Ellipse 10"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                HorizontalOptions="End">
+                                            <Grid>
+                                                <Image Source="pen_icon.png"
+                                                       VerticalOptions="Center"
+                                                       HorizontalOptions="Center"
+                                                       Grid.Column="1"
+                                                       HeightRequest="20">
+                                                    <Image.Behaviors>
+                                                        <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference BoardLabel}, Path=TextColor}" />
+                                                    </Image.Behaviors>
+                                                </Image>
+                                                <Button BackgroundColor="Transparent"
+                                                        Command="{Binding EditCommand}"/>
+                                            </Grid>
+                                        </Border>
+                                    </Grid>
+                                    <CollectionView ItemsSource="{Binding OwnedCards, Mode=OneWay}"
+                                                    SelectionMode="None"
+                                                    BackgroundColor="Transparent"
+                                                    Grid.Row="1"
+                                                    Margin="5,0">
+                                        <CollectionView.ItemsLayout>
+                                            <GridItemsLayout Orientation="Vertical"
+                                                             VerticalItemSpacing="5"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="{x:Type models:Card}">
+                                                <Border Padding="10"
+                                                        HeightRequest="140"
+                                                        BackgroundColor="{DynamicResource Tertiary}">
+                                                    <Grid RowDefinitions="Auto, Auto, Auto"
+                                                          RowSpacing="5">
+                                                        <Grid ColumnDefinitions="*, Auto"
+                                                              ColumnSpacing="1">
+                                                            <Label Text="{Binding Title}"
+                                                                    LineBreakMode="TailTruncation"
+                                                                    VerticalTextAlignment="Center"/>
+                                                            <Border Grid.Column="1"
+                                                                    BackgroundColor="{DynamicResource Quaternary}"
+                                                                    Padding="15,5"
+                                                                    HorizontalOptions="Center"
+                                                                    StrokeShape="RoundRectangle 20"
+                                                                    IsVisible="{Binding HasDueDate}">
+                                                                <Label Text="{Binding DateOnly}"
+                                                                       LineBreakMode="TailTruncation"
+                                                                       FontSize="10"/>
+                                                            </Border>
+                                                        </Grid>
+                                                        <Border Grid.Row="1"
+                                                                Padding="5"
+                                                                BackgroundColor="{DynamicResource Secondary}">
+                                                            <CollectionView ItemsSource="{Binding Labels, Mode=OneWay}"
+                                                                            SelectionMode="None"
+                                                                            BackgroundColor="Transparent"
+                                                                            Grid.Row="1"
+                                                                            ItemsUpdatingScrollMode="KeepLastItemInView"
+                                                                            HorizontalScrollBarVisibility="Always">
+                                                                <CollectionView.ItemsLayout>
+                                                                    <GridItemsLayout Orientation="Horizontal"
+                                                                                        HorizontalItemSpacing="2"/>
+                                                                </CollectionView.ItemsLayout>
+                                                                <CollectionView.ItemTemplate>
+                                                                    <DataTemplate x:DataType="{x:Type models:Label}">
+                                                                        <Border Background ="{Binding Color}"
+                                                                                WidthRequest="50"
+                                                                                HeightRequest="20"
+                                                                                HorizontalOptions="Start"
+                                                                                Padding="0">
+                                                                            <Label Text="{Binding Title}"
+                                                                                   TextColor="{DynamicResource Quaternary}"
+                                                                                   Margin="5,0"
+                                                                                   FontSize="10"
+                                                                                   VerticalTextAlignment="Center"
+                                                                                   LineBreakMode="TailTruncation"/>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </CollectionView.ItemTemplate>
+                                                                <CollectionView.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding EditCommand}"/>
+                                                                </CollectionView.GestureRecognizers>
+                                                            </CollectionView>
+                                                            <Border.Triggers>
+                                                                <DataTrigger TargetType="Border"
+                                                                                Binding="{Binding LabelIds.Count}"
+                                                                                Value="0">
+                                                                    <Setter Property="IsVisible" Value="false"/>
+                                                                </DataTrigger>
+                                                            </Border.Triggers>
+                                                        </Border>
+                                                        <Border Grid.Row="2"
+                                                                Padding="5,0"
+                                                                MaximumHeightRequest="50"
+                                                                BackgroundColor="{DynamicResource Secondary}">
+                                                            <CollectionView ItemsSource="{Binding CheckListElements, Mode=OneWay}"
+                                                                            SelectionMode="None"
+                                                                            BackgroundColor="Transparent"
+                                                                            Grid.Row="1"
+                                                                            ItemsUpdatingScrollMode="KeepScrollOffset"
+                                                                            VerticalScrollBarVisibility="Always">
+                                                                <CollectionView.ItemsLayout>
+                                                                    <GridItemsLayout Orientation="Vertical"
+                                                                                        VerticalItemSpacing="2"/>
+                                                                </CollectionView.ItemsLayout>
+                                                                <CollectionView.ItemTemplate>
+                                                                    <DataTemplate x:DataType="{x:Type models:ChecklistElement}">
+                                                                        <Border Background ="{DynamicResource Primary}"
+                                                                                HeightRequest="20"
+                                                                                Padding="5,0">
+                                                                            <Grid>
+                                                                                <Label Text="{Binding Title}"
+                                                                                        TextColor="{DynamicResource Quaternary}"
+                                                                                        Margin="5,0"
+                                                                                        FontSize="10"
+                                                                                        HorizontalOptions="Start"
+                                                                                        VerticalTextAlignment="Center"
+                                                                                        LineBreakMode="TailTruncation"/>
+                                                                                <Border Grid.Column="1"
+                                                                                        BackgroundColor="{DynamicResource Tertiary}"
+                                                                                        HeightRequest="15"
+                                                                                        WidthRequest="15"
+                                                                                        HorizontalOptions="End">
+                                                                                    <Image Source="checkmark_icon.png"
+                                                                                            VerticalOptions="Center"
+                                                                                            HorizontalOptions="Center"
+                                                                                            HeightRequest="5"
+                                                                                            IsVisible="{Binding IsChecked}">
+                                                                                        <Image.Behaviors>
+                                                                                            <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference BoardLabel}, Path=TextColor}" />
+                                                                                        </Image.Behaviors>
+                                                                                    </Image>
+                                                                                </Border>
+                                                                            </Grid>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </CollectionView.ItemTemplate>
+                                                                <CollectionView.GestureRecognizers>
+                                                                    <TapGestureRecognizer Command="{Binding EditCommand}"/>
+                                                                </CollectionView.GestureRecognizers>
+                                                            </CollectionView>
+                                                            <Border.Triggers>
+                                                                <DataTrigger TargetType="Border"
+                                                                             Binding="{Binding CheckListElements.Count}"
+                                                                             Value="0">
+                                                                    <Setter Property="IsVisible" Value="false"/>
+                                                                </DataTrigger>
+                                                            </Border.Triggers>
+                                                        </Border>
+                                                    </Grid>
+                                                    <Border.GestureRecognizers>
+                                                        <TapGestureRecognizer Command="{Binding EditCommand}"/>
+                                                        <DragGestureRecognizer CanDrag="True"
+                                                                               DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=SetItemCommand}"
+                                                                               DragStartingCommandParameter="{Binding .}"
+                                                                               DropCompleted="DropCompleted"
+                                                                               DragStarting="DragStarting"/>
+                                                        <DropGestureRecognizer AllowDrop="True"
+                                                                               DropCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=MoveItemCommand}"
+                                                                               DropCommandParameter="{Binding .}"
+                                                                               Drop="Drop"
+                                                                               DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=SetDragCommand}"
+                                                                               DragOverCommandParameter="{Binding .}"
+                                                                               DragOver="DragOver"/>
+                                                    </Border.GestureRecognizers>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                    <Grid HeightRequest="40"
+                                          Grid.Row="2"
+                                          BackgroundColor="{DynamicResource Secondary}">
+                                        <Grid>
+                                            <Image Source="plus_icon.png"
+                                                   HeightRequest="20">
+                                                <Image.Behaviors>
+                                                    <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference BoardLabel}, Path=TextColor}" />
+                                                </Image.Behaviors>
+                                            </Image>
+                                            <Button Command="{Binding AddCardCommand}"
+                                                    CommandParameter="{Binding .}"
+                                                    BackgroundColor="Transparent"/>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                                <Border.GestureRecognizers>
+                                    <DragGestureRecognizer CanDrag="True"
+                                                           DragStartingCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=SetItemCommand}"
+                                                           DragStartingCommandParameter="{Binding .}"
+                                                           DropCompleted="DropCompleted"
+                                                           DragStarting="DragStarting"/>
+                                    <DropGestureRecognizer AllowDrop="True"
+                                                           DropCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=MoveItemCommand}"
+                                                           DropCommandParameter="{Binding .}"
+                                                           DragOverCommand="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=SetDragCommand}"
+                                                           DragOverCommandParameter="{Binding .}"
+                                                           DragOver="DragOver"/>
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                    <CollectionView.Footer>
+                        <Border Padding="10"
+                                WidthRequest="190"
+                                BackgroundColor="{DynamicResource Primary}">
+                            <Grid>
+                                <Grid RowDefinitions="*"
+                                      ColumnDefinitions="*">
+                                    <Image Source="plus_icon.png"
+                                           WidthRequest="50">
+                                        <Image.Behaviors>
+                                            <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Grid1}, Path=BackgroundColor}" />
+                                        </Image.Behaviors>
+                                    </Image>
+                                    <Button BackgroundColor="Transparent"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:BoardViewModel}}, Path=AddListCommand}"/>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </CollectionView.Footer>
+                </CollectionView>
+            </Grid>
+        </Grid>
+    </Grid>
+</ContentPage>

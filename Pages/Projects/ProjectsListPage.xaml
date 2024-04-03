@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Pages.Projects.ProjectsListPage"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:DataType="viewmodel:ProjectsListViewModel"
+             Appearing="ChangeAutoSaveStatus">
+    <ContentPage.Resources>
+        <converter:IntToString x:Key="intToString" />
+    </ContentPage.Resources>
+    <Grid>
+        <StackLayout x:Name="Layout">
+            <Grid ColumnDefinitions="*,*"
+                  RowDefinitions="*"
+                  HeightRequest="70"
+                  Padding="15, 0"
+                  BackgroundColor="{DynamicResource Tertiary}">
+                <Label Text="{loc:Translate Projects}"
+                       VerticalOptions="Center"
+                       FontSize="Large"/>
+                <Button Text="+"
+                        Command="{Binding AddCommand}"
+                        CornerRadius="15"
+                        FontSize="30"
+                        TextColor="{DynamicResource Quaternary}"
+                        Grid.Column="1"
+                        BackgroundColor="{DynamicResource Primary}"
+                        HeightRequest="60"
+                        WidthRequest="100"
+                        VerticalOptions="Center"
+                        HorizontalOptions="End"/>
+
+            </Grid>
+            <ScrollView VerticalOptions="FillAndExpand"
+                        Padding="10, 0">
+                <CollectionView ItemsSource="{Binding Boards, Mode=OneWay}"
+                                SelectionMode="None">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"
+                                           ItemSpacing="10"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="{x:Type models:Board}">
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem BackgroundColor="{DynamicResource Tertiary}"
+                                                   IconImageSource="trash_icon.png"
+                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ProjectsListViewModel}}, Path=RequestDeleteCommand}"
+                                                   CommandParameter="{Binding .}">
+                                        </SwipeItem>
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+                                <Border Padding="10"
+                                        VerticalOptions="Center"
+                                        HeightRequest="150">
+                                    <Grid ColumnDefinitions=".2*,Auto"
+                                          RowDefinitions="Auto, Auto, Auto"
+                                          BackgroundColor="{DynamicResource Secondary}">
+                                        <Label Text="{Binding Name}"
+                                               Grid.ColumnSpan="3"
+                                               Grid.Row="0"
+                                               FontSize="32"
+                                               Margin="10,0,0,0"
+                                               LineBreakMode="TailTruncation"/>
+                                        <Grid Grid.Row="1"
+                                              ColumnDefinitions="Auto,Auto,*,Auto"
+                                              RowDefinitions="*,*">
+                                        </Grid>
+                                    </Grid>
+                                    <Border.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ProjectsListViewModel}}, Path=EditCommand}" 
+                                                              CommandParameter="{Binding .}"/>
+                                    </Border.GestureRecognizers>
+                                </Border>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </ScrollView>
+        </StackLayout>
+        <Grid IsVisible="{Binding IsWindowOpen}"
+                  RowDefinitions="*"
+                  ColumnDefinitions="*">
+            <Image BackgroundColor="{DynamicResource Quaternary}"
+                       Opacity="0.5"/>
+            <Frame Padding="0"
+                   Margin="0"
+                   BackgroundColor="Transparent">
+                <Grid RowDefinitions="Auto"
+                          ColumnDefinitions="300"
+                          VerticalOptions="Center"
+                          HorizontalOptions="Center">
+                    <Border BackgroundColor="{DynamicResource Primary}">
+                        <Grid RowDefinitions="Auto,Auto"
+                                  ColumnDefinitions="*,*"
+                                  ColumnSpacing="15"
+                                  RowSpacing="15">
+                            <Label Text="{loc:Translate Confirmation_Board_Delete}"
+                                       TextColor="{DynamicResource Quaternary}"
+                                       Grid.ColumnSpan="2"/>
+                            <Button Grid.Row="1"
+                                        Text="{loc:Translate Yes}"
+                                        Command="{Binding DeleteCommand}"/>
+                            <Button Grid.Row="1"
+                                        Grid.Column="1"
+                                        Text="{loc:Translate No}"
+                                        Command="{Binding HideWindowCommand}"/>
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Frame>
+        </Grid>
+    </Grid>
+</ContentPage>

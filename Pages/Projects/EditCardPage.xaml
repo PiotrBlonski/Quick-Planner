@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Pages.Projects.EditCardPage"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:DataType="viewmodel:EditCardViewModel"
+             BackgroundColor="{DynamicResource Quaternary}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <toolkit:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <Grid>
+        <Grid RowDefinitions="*,Auto">
+            <ScrollView>
+                <Grid RowSpacing="10"
+                      RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                      Padding="10">
+                    <Grid RowDefinitions="Auto,Auto"
+                          RowSpacing="10">
+                        <Label Text="{loc:Translate Title}"
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Start"
+                               x:Name="Label"
+                               TextColor="{DynamicResource Primary}"/>
+                        <Border Grid.Row="1" >
+                            <Entry Text="{Binding Card.Title}"/>
+                        </Border>
+                    </Grid>
+                    <Grid RowDefinitions="Auto,Auto"
+                          RowSpacing="10"
+                          Grid.Row="1">
+                        <Label Text="{loc:Translate Labels}"
+                                VerticalOptions="Center" 
+                                HorizontalOptions="Start"/>
+                        <Border Grid.Row="1"
+                                HeightRequest="200">
+                            <Grid RowDefinitions="Auto, *"
+                                  RowSpacing="15">
+                                <Border BackgroundColor="{DynamicResource Quaternary}"
+                                        HeightRequest="100"
+                                        Padding="0">
+                                    <CollectionView ItemsSource="{Binding Card.Labels}"
+                                                    BackgroundColor="Transparent">
+                                        <CollectionView.ItemsLayout>
+                                            <GridItemsLayout Orientation="Horizontal"
+                                                             HorizontalItemSpacing="10"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="{x:Type models:Label}">
+                                                <Border BackgroundColor="{Binding Color}"
+                                                        HeightRequest="60"
+                                                        WidthRequest="155">
+                                                    <Label Text="{Binding Title}"
+                                                           VerticalOptions="Center"
+                                                           LineBreakMode="TailTruncation"
+                                                           TextColor="{DynamicResource Quaternary}"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </Border>
+                                <Button Grid.Row="1"
+                                        Text="{loc:Translate Select_Labels}"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditCardViewModel}}, Path=OpenLabelsWindowCommand}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Row="2"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="15">
+                        <Label Text="{loc:Translate Set_Due_Date}"/>
+                        <Border Grid.Row="1">
+                            <Grid RowDefinitions="Auto,Auto"
+                                    RowSpacing="15">
+                                <Border Grid.Row="0"
+                                        BackgroundColor="{DynamicResource Quaternary}"
+                                        HeightRequest="80">
+                                    <DatePicker Date="{Binding Card.DueDate, Mode=TwoWay}"
+                                                Grid.Row="1"
+                                                HorizontalOptions="Center"
+                                                VerticalOptions="Center"/>
+                                </Border>
+                                <Frame Grid.Row="0"
+                                        BackgroundColor="{DynamicResource Quaternary}"
+                                        HeightRequest="80"
+                                        Opacity="0.8"
+                                        IsVisible="{Binding Card.HasDueDate, Mode=OneWay, Converter={StaticResource InvertedBoolConverter}}"/>
+                                <Border BackgroundColor="{DynamicResource Tertiary}"
+                                        HeightRequest="70"
+                                        Padding="15,0"
+                                        Grid.Row="1">
+                                    <Grid>
+                                        <Label Text="{loc:Translate Enable}"
+                                                VerticalTextAlignment="Center"
+                                                HorizontalTextAlignment="Start"/>
+                                        <Switch ThumbColor="{DynamicResource Secondary}"
+                                                OnColor="{DynamicResource Primary}"
+                                                IsToggled="{Binding Card.HasDueDate, Mode=TwoWay}"
+                                                HorizontalOptions="End"/>
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Row="3"
+                            RowDefinitions="Auto,Auto"
+                            RowSpacing="15">
+                        <Label Text="{loc:Translate Checkmarks}"/>
+                        <Border Grid.Row="1">
+                            <Grid RowDefinitions="Auto,Auto"
+                                 RowSpacing="15">
+                                <Border BackgroundColor="{DynamicResource Quaternary}"
+                                        HeightRequest="300"
+                                        Padding="5, 0">
+                                    <CollectionView ItemsSource="{Binding Card.CheckListElements}"
+                                                    BackgroundColor="Transparent">
+                                        <CollectionView.ItemsLayout>
+                                            <GridItemsLayout Orientation="Vertical"
+                                                             VerticalItemSpacing="5"/>
+                                        </CollectionView.ItemsLayout>
+                                        <CollectionView.ItemTemplate>
+                                            <DataTemplate x:DataType="{x:Type models:ChecklistElement}">
+                                                <Grid ColumnDefinitions="*,Auto"
+                                                      ColumnSpacing="15">
+                                                    <Border BackgroundColor="{DynamicResource Primary}"
+                                                            HeightRequest="60"
+                                                            Padding="15,0">
+                                                        <Grid>
+                                                            <Label Text="{Binding Title}"
+                                                                    VerticalOptions="Center"
+                                                                    HorizontalOptions="Start"
+                                                                    TextColor="{DynamicResource Quaternary}"
+                                                                    LineBreakMode="TailTruncation"/>
+                                                            <Border Grid.Column="1"
+                                                                    HeightRequest="50"
+                                                                    WidthRequest="50"
+                                                                    HorizontalOptions="End"
+                                                                    BackgroundColor="{DynamicResource Tertiary}">
+                                                                <Image Source="checkmark_icon.png"
+                                                                        HeightRequest="20"
+                                                                        WidthRequest="20"
+                                                                        IsVisible="{Binding IsChecked}">
+                                                                    <Image.Behaviors>
+                                                                        <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Label}, Path=TextColor}"/>
+                                                                    </Image.Behaviors>
+                                                                </Image>
+                                                            </Border>
+                                                        </Grid>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding ChangeCheckStateCommand}" />
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
+                                                    <Border Grid.Column="1"
+                                                            HeightRequest="50"
+                                                            WidthRequest="50"
+                                                            StrokeShape="RoundRectangle 90"
+                                                            Padding="0">
+                                                        <Image Source="trash_icon.png"
+                                                               HeightRequest="20"
+                                                               WidthRequest="20">
+                                                            <Image.Behaviors>
+                                                                <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Label}, Path=TextColor}"/>
+                                                            </Image.Behaviors>
+                                                        </Image>
+                                                        <Border.GestureRecognizers>
+                                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:EditCardViewModel}}, Path=RemoveCheckmarkCommand}" 
+                                                                                    CommandParameter="{Binding .}"/>
+                                                        </Border.GestureRecognizers>
+                                                    </Border>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </CollectionView.ItemTemplate>
+                                    </CollectionView>
+                                </Border>
+                                <Button Grid.Row="1"
+                                        Text="{loc:Translate Add}"
+                                        HeightRequest="60"
+                                        Command="{Binding OpenCheckListWindowCommand}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Button Text="{loc:Translate Move_Card}"
+                                HeightRequest="70"
+                                Command="{Binding OpenMoveWindowCommand}"/>
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <Button Text="{loc:Translate Remove_Card}"
+                                TextColor="OrangeRed"
+                                HeightRequest="70"
+                                Command="{Binding OpenRemoveWindowCommand}"/>
+                    </Grid>
+                </Grid>
+            </ScrollView>
+            <Button Grid.Row="1"
+                    HeightRequest="100"
+                    Clicked="Return"
+                    FontSize="Large"
+                    Text="{loc:Translate Back}"/>
+        </Grid>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Quick_Planner.Pages.Tasks.TasksListPage"
+             xmlns:viewmodel="clr-namespace:Quick_Planner.ViewModels"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:loc="clr-namespace:LocalizationResourceManager.Maui;assembly=LocalizationResourceManager.Maui"
+             xmlns:converter="clr-namespace:Quick_Planner.Resources.Converters"
+             xmlns:models="clr-namespace:Quick_Planner.Models"
+             x:DataType="viewmodel:TasksViewModel">
+    <ContentPage.Resources>
+        <converter:IntToString x:Key="intToString" />
+    </ContentPage.Resources>
+    <StackLayout x:Name="Layout">
+        <Grid ColumnDefinitions="*,*"
+              RowDefinitions="*"
+              HeightRequest="70"
+              Padding="15, 0"
+              BackgroundColor="{DynamicResource Tertiary}">
+            <Label Text="{loc:Translate Tasks}"
+                   VerticalOptions="Center"
+                   FontSize="Large"/>
+            <Button Text="+"
+                    Command="{Binding AddCommand}"
+                    CornerRadius="15"
+                    FontSize="30"
+                    TextColor="{DynamicResource Quaternary}"
+                    Grid.Column="1"
+                    BackgroundColor="{DynamicResource Primary}"
+                    HeightRequest="60"
+                    WidthRequest="100"
+                    VerticalOptions="Center"
+                    HorizontalOptions="End"/>
+        </Grid>
+        <ScrollView VerticalOptions="FillAndExpand"
+                    Padding="10, 0">
+            <CollectionView ItemsSource="{Binding Tasks, Mode=OneWay}"
+                            SelectionMode="None">
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout Orientation="Vertical"
+                                       ItemSpacing="10"/>
+                </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type models:Task}">
+                        <SwipeView>
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem BackgroundColor="{DynamicResource Tertiary}"
+                                               IconImageSource="trash_icon.png"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TasksViewModel}}, Path=DeleteCommand}"
+                                               CommandParameter="{Binding .}">
+                                    </SwipeItem>
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+                            <Frame>
+                                <Grid ColumnDefinitions=".2*,Auto"
+                                      RowDefinitions="Auto, Auto, Auto"
+                                      HeightRequest="120"
+                                      BackgroundColor="{DynamicResource Secondary}">
+                                    <Label Text="{Binding Title}"
+                                           Grid.ColumnSpan="3"
+                                           Grid.Row="0"
+                                           FontSize="32"
+                                           Margin="10,0,0,0"
+                                           LineBreakMode="TailTruncation"/>
+                                    <Grid Grid.Row="1"
+                                          ColumnDefinitions="Auto,Auto,*,Auto"
+                                          RowDefinitions="*,*"
+                                          IsVisible="{Binding HasEndDate}"
+                                          IsEnabled="{Binding HasEndDate}">
+                                        <Image Source="calendar_icon.png"
+                                               Grid.Row="0"
+                                               Grid.Column="0"
+                                               HeightRequest="30"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Layout}, Path=BackgroundColor}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Image Source="clock_icon.png"
+                                               Grid.Row="1"
+                                               Grid.Column="0"
+                                               HeightRequest="30"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start"
+                                               Scale="0.8">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Layout}, Path=BackgroundColor}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                        <Label Text="{Binding DateOnly, Mode=OneWay}"
+                                               Grid.Column="1"
+                                               Grid.Row="0"
+                                               FontSize="24"
+                                               Margin="15, 0, 0, 0"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start"
+                                               TextColor="{DynamicResource Tertiary}"/>
+                                        <Label Text="{Binding CultureAwareTime, Mode=OneWay}"
+                                               Grid.Column="1"
+                                               Grid.Row="1"
+                                               FontSize="24"
+                                               Margin="15, 0, 0, 0"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="Start"
+                                               TextColor="{DynamicResource Tertiary}"/>
+                                        <Label Text="{Binding CultureAwareNotificationTime}"
+                                               Grid.Column="2"
+                                               Grid.RowSpan="2"
+                                               Grid.Row="0"
+                                               FontSize="24"
+                                               Margin="0, 0, 15, 0"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="End"
+                                               TextColor="{DynamicResource Tertiary}"
+                                               IsVisible="{Binding IsNotificationTimeSet}"
+                                               IsEnabled="{Binding IsNotificationTimeSet}"/>
+                                        <Image x:Name="img2"
+                                               Grid.Row="0"
+                                               Grid.Column="3"
+                                               Grid.RowSpan="3"
+                                               Source="{Binding Notificationtype, Converter={StaticResource intToString}}"
+                                               HeightRequest="30"
+                                               VerticalOptions="Center"
+                                               HorizontalOptions="End">
+                                            <Image.Behaviors>
+                                                <toolkit:IconTintColorBehavior TintColor="{Binding Source={x:Reference Layout}, Path=BackgroundColor}" />
+                                            </Image.Behaviors>
+                                        </Image>
+                                    </Grid>
+                                </Grid>
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TasksViewModel}}, Path=EditCommand}" 
+                                                          CommandParameter="{Binding .}"/>
+                                </Frame.GestureRecognizers>
+                                <Frame.Triggers>
+                                    <DataTrigger TargetType="Frame"
+                                         Binding="{Binding HasPassed}"
+                                         Value="True">
+                                        <Setter Property="Opacity" Value="0.5"/>
+                                    </DataTrigger>
+                                </Frame.Triggers>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </ScrollView>
+    </StackLayout>
+</ContentPage>
